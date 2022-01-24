@@ -1,11 +1,13 @@
 package com.github.topisenpai.plugin.spotify;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
 import com.sedmelluq.discord.lavaplayer.track.AudioItem;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioReference;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.track.DelegatedAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.InternalAudioTrack;
@@ -19,6 +21,8 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static com.github.topisenpai.plugin.spotify.SpotifySourceManager.ISRC_PATTERN;
 import static com.github.topisenpai.plugin.spotify.SpotifySourceManager.QUERY_PATTERN;
@@ -115,24 +119,32 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 		return this.spotifySourceManager;
 	}
 
-	public AudioItem loadItem(String query){
-		try{
-			var apm = this.spotifySourceManager.getAudioPlayerManager();
-			var f = apm.getClass().getDeclaredField("sourceManagers");
-			f.setAccessible(true);
-			var managers = (List<AudioSourceManager>) f.get(apm);
-			for(var manager : managers){
-				var item = manager.loadItem(null, new AudioReference(query, null));
-				if(item != null){
-					return item;
-				}
+	public AudioItem loadItem(String query) throws Exception {
+		var cf = new CompletableFuture<AudioItem>();
+		this.spotifySourceManager.getAudioPlayerManager().loadItem(query, new AudioLoadResultHandler(){
+
+			@Override
+			public void trackLoaded(AudioTrack track){
+				cf.complete(track);
 			}
-			return null;
-		}
-		catch(NoSuchFieldException | IllegalAccessException e){
-			log.error("An error occurred while loading item", e);
-		}
-		return null;
+
+			@Override
+			public void playlistLoaded(AudioPlaylist playlist){
+				cf.complete(playlist);
+			}
+
+			@Override
+			public void noMatches(){
+				cf.complete(null);
+			}
+
+			@Override
+			public void loadFailed(FriendlyException exception){
+				cf.completeExceptionally(exception);
+			}
+		});
+		cf.join();
+		return cf.get();
 	}
 
 }

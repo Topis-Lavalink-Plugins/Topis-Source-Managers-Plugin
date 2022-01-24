@@ -20,6 +20,7 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static com.github.topisenpai.plugin.spotify.SpotifySourceManager.ISRC_PATTERN;
 import static com.github.topisenpai.plugin.spotify.SpotifySourceManager.QUERY_PATTERN;
@@ -116,7 +117,7 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 		return this.spotifySourceManager;
 	}
 
-	public AudioItem loadItem(String query) throws Exception{
+	public AudioItem loadItem(String query) throws ExecutionException, InterruptedException{
 		var cf = new CompletableFuture<AudioItem>();
 		this.spotifySourceManager.getAudioPlayerManager().loadItem(query, new AudioLoadResultHandler(){
 

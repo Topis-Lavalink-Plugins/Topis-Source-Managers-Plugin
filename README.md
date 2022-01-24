@@ -29,7 +29,7 @@ plugins:
     providers: # Custom providers for track loading. This is the default
         - "ytsearch:\"%ISRC%\"" # Will be ignored if track does not have an ISRC. See https://en.wikipedia.org/wiki/International_Standard_Recording_Code
         - "ytsearch:%QUERY%" # Will be used if track has no ISRC or no track could be found for the ISRC
-       # - "scsearch:%QUERY%" you can add multiple other fallbacks sources here
+      # - "scsearch:%QUERY%" you can add multiple other fallback sources here
 ```
 
 ## Usage

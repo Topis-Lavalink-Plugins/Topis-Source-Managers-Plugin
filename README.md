@@ -27,7 +27,7 @@ plugins:
     clientSecret: "your client secret"
     countryCode: "US" # the country code you want to use for filtering the artists top tracks. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
     providers: # Custom providers for track loading. This is the default
-        - "ytsearch:\"%ISRC%\"" # Will be ignored if track does not have an ISRC
+        - "ytsearch:\"%ISRC%\"" # Will be ignored if track does not have an ISRC. See https://en.wikipedia.org/wiki/International_Standard_Recording_Code
         - "ytsearch:%QUERY%" 
 ```
 

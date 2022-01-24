@@ -85,15 +85,15 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 				continue;
 			}
 
-			if(this.isrc != null){
-				identifier = identifier.replace(ISRC_PATTERN, this.isrc);
-			}
-			else{
-				if(identifier.contains(ISRC_PATTERN)){
+			if(identifier.contains(ISRC_PATTERN)){
+				if(this.isrc != null){
+					identifier = identifier.replace(ISRC_PATTERN, this.isrc);
+				}else{
 					log.debug("Spotify: Ignoring identifier \"" + identifier + "\" because this track does not have an ISRC!");
 					continue;
 				}
 			}
+
 			identifier = identifier.replace(QUERY_PATTERN, buildSearchQuery());
 			track = loadItem(identifier);
 			if(track != null){

@@ -10,13 +10,20 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.track.DelegatedAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.InternalAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.michaelthelin.spotify.model_objects.specification.Album;
 import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
 import se.michaelthelin.spotify.model_objects.specification.Image;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 
+import static com.github.topisenpai.plugin.spotify.SpotifyConfig.ISRC_PATTERN;
+import static com.github.topisenpai.plugin.spotify.SpotifyConfig.QUERY_PATTERN;
+
 public class SpotifyTrack extends DelegatedAudioTrack{
+
+	private static final Logger log = LoggerFactory.getLogger(SpotifyTrack.class);
 
 	private final String isrc;
 	private final String artworkURL;
@@ -56,7 +63,7 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 	}
 
 	private String getQuery(){
-		var query = "ytsearch:" + trackInfo.title;
+		var query = trackInfo.title;
 		if(!trackInfo.author.equals("unknown")){
 			query += " " + trackInfo.author;
 		}
@@ -65,12 +72,30 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 
 	@Override
 	public void process(LocalAudioTrackExecutor executor) throws Exception{
+		SpotifyConfig config = this.spotifySourceManager.getConfig();
 		AudioItem track = null;
-		if(this.isrc != null){
-			track = this.spotifySourceManager.getSearchSourceManager().loadItem(null, new AudioReference("ytsearch:\"" + this.isrc + "\"", null));
-		}
-		if(track == null){
-			track = this.spotifySourceManager.getSearchSourceManager().loadItem(null, new AudioReference(getQuery(), null));
+
+		for(int i = 0; i < config.providers.length; i++){
+			String identifier = config.providers[i];
+			if(identifier.startsWith(SpotifySourceManager.SEARCH_PREFIX)){
+				continue;
+			}
+			if(this.isrc != null){
+				identifier = identifier.replace(ISRC_PATTERN, this.isrc);
+			}else{
+				if(identifier.contains(ISRC_PATTERN)){
+					log.info("Spotify: Ignoring identifier \""+identifier+"\" because this track does not have an ISRC!");
+					continue;
+				}
+			}
+			identifier = identifier.replace(QUERY_PATTERN, getQuery());
+			track = this.spotifySourceManager.getSearchSourceManager().loadItem(null, new AudioReference(identifier, null));
+			if (track != null){
+				log.info("Spotify: Loaded item from identifier \""+identifier+"\"");
+				break;
+			}else{
+				log.info("Spotify: Identifier \""+identifier+"\" returned no results");
+			}
 		}
 
 		if(track instanceof AudioPlaylist){

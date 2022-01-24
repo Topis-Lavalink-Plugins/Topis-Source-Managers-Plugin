@@ -208,4 +208,8 @@ public class SpotifySourceManager implements AudioSourceManager{
 		return new BasicAudioPlaylist(artist.getName() + "'s Top Tracks", tracks, null, false);
 	}
 
+	public SpotifyConfig getConfig(){
+		return config;
+	}
+
 }

@@ -8,9 +8,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpotifyConfig{
 
+	public static final String ISRC_PATTERN = "%ISRC%";
+	public static final String QUERY_PATTERN = "%QUERY%";
+
 	public String clientId;
 	public String clientSecret;
 	public CountryCode countryCode = CountryCode.US;
+	public String[] providers = {
+		"ytsearch:\""+ISRC_PATTERN+"\"",
+		"ytsearch:"+QUERY_PATTERN
+	};
 
 	public String getClientId(){
 		return this.clientId;
@@ -36,4 +43,11 @@ public class SpotifyConfig{
 		this.countryCode = CountryCode.getByCode(countryCode);
 	}
 
+	public String[] getProviders(){
+		return providers;
+	}
+
+	public void setProviders(String[] providers){
+		this.providers = providers;
+	}
 }

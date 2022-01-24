@@ -47,7 +47,7 @@ You can also use `spsearch:<query>`(remove the <>) to search for songs on Spotif
 
 ---
 
-In some cases a requested Spotify songs can't be found on YouTube then you will receive a normal `TrackStartEvent`
+In case a requested Spotify song can't be found on YouTube, you will receive a normal `TrackStartEvent`
 followed by a `TrackExceptionEvent` and later `TrackEndEvent`
 
 <details>

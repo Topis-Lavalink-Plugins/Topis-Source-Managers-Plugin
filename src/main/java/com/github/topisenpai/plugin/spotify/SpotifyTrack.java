@@ -64,7 +64,7 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 		return this.artworkURL;
 	}
 
-	private String buildSearchQuery(){
+	private String getTrackTitle(){
 		var query = trackInfo.title;
 		if(!trackInfo.author.equals("unknown")){
 			query += " " + trackInfo.author;
@@ -74,28 +74,27 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 
 	@Override
 	public void process(LocalAudioTrackExecutor executor) throws Exception{
-		SpotifyConfig config = this.spotifySourceManager.getConfig();
+		var config = this.spotifySourceManager.getConfig();
 		AudioItem track = null;
 
-		for(int i = 0; i < config.providers.length; i++){
-			String identifier = config.providers[i];
-
-			if(identifier.startsWith(SpotifySourceManager.SEARCH_PREFIX)){
-				log.warn("Can not use spsearch as provider!");
+		for(String provider : config.providers){
+			if(provider.startsWith(SpotifySourceManager.SEARCH_PREFIX)){
+				log.warn("Can not use spotify search as provider!");
 				continue;
 			}
 
-			if(identifier.contains(ISRC_PATTERN)){
+			if(provider.contains(ISRC_PATTERN)){
 				if(this.isrc != null){
-					identifier = identifier.replace(ISRC_PATTERN, this.isrc);
-				}else{
-					log.debug("Spotify: Ignoring identifier \"" + identifier + "\" because this track does not have an ISRC!");
+					provider = provider.replace(ISRC_PATTERN, this.isrc);
+				}
+				else{
+					log.debug("Ignoring identifier \"" + provider + "\" because this track does not have an ISRC!");
 					continue;
 				}
 			}
 
-			identifier = identifier.replace(QUERY_PATTERN, buildSearchQuery());
-			track = loadItem(identifier);
+			provider = provider.replace(QUERY_PATTERN, getTrackTitle());
+			track = loadItem(provider);
 			if(track != null){
 				break;
 			}

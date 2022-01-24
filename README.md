@@ -26,6 +26,10 @@ plugins:
     clientId: "your client id"
     clientSecret: "your client secret"
     countryCode: "US" # the country code you want to use for filtering the artists top tracks. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+    providers: # Custom providers for track loading. This is the default
+        - "ytsearch:\"%ISRC%\"" # Will be ignored if track does not have an ISRC. See https://en.wikipedia.org/wiki/International_Standard_Recording_Code
+        - "ytsearch:%QUERY%" # Will be used if track has no ISRC or no track could be found for the ISRC
+      # - "scsearch:%QUERY%" you can add multiple other fallback sources here
 ```
 
 ## Usage
@@ -43,7 +47,7 @@ You can also use `spsearch:<query>`(remove the <>) to search for songs on Spotif
 
 ---
 
-In some cases a requested Spotify songs can't be found on YouTube then you will receive a normal `TrackStartEvent`
+In case a requested Spotify song can't be found, you will receive a normal `TrackStartEvent`
 followed by a `TrackExceptionEvent` and later `TrackEndEvent`
 
 <details>

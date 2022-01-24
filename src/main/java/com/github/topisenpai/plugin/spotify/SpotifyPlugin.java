@@ -1,7 +1,6 @@
 package com.github.topisenpai.plugin.spotify;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import dev.arbjerg.lavalink.api.AudioPlayerManagerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ public class SpotifyPlugin implements AudioPlayerManagerConfiguration{
 			log.error("No spotify client secret found in configuration. Not registering spotify source manager. Config key is 'plugins.spotify.clientSecret");
 			return manager;
 		}
-		manager.registerSourceManager(new SpotifySourceManager(this.config, manager.source(YoutubeAudioSourceManager.class)));
+		manager.registerSourceManager(new SpotifySourceManager(this.config, manager));
 		return manager;
 	}
 

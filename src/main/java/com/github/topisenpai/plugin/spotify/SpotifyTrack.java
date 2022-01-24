@@ -1,22 +1,33 @@
 package com.github.topisenpai.plugin.spotify;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
 import com.sedmelluq.discord.lavaplayer.track.AudioItem;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioReference;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.sedmelluq.discord.lavaplayer.track.DelegatedAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.InternalAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.michaelthelin.spotify.model_objects.specification.Album;
 import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
 import se.michaelthelin.spotify.model_objects.specification.Image;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import static com.github.topisenpai.plugin.spotify.SpotifySourceManager.ISRC_PATTERN;
+import static com.github.topisenpai.plugin.spotify.SpotifySourceManager.QUERY_PATTERN;
+
 public class SpotifyTrack extends DelegatedAudioTrack{
+
+	private static final Logger log = LoggerFactory.getLogger(SpotifyTrack.class);
 
 	private final String isrc;
 	private final String artworkURL;
@@ -55,8 +66,8 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 		return this.artworkURL;
 	}
 
-	private String getQuery(){
-		var query = "ytsearch:" + trackInfo.title;
+	private String getTrackTitle(){
+		var query = trackInfo.title;
 		if(!trackInfo.author.equals("unknown")){
 			query += " " + trackInfo.author;
 		}
@@ -65,12 +76,30 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 
 	@Override
 	public void process(LocalAudioTrackExecutor executor) throws Exception{
+		var config = this.spotifySourceManager.getConfig();
 		AudioItem track = null;
-		if(this.isrc != null){
-			track = this.spotifySourceManager.getSearchSourceManager().loadItem(null, new AudioReference("ytsearch:\"" + this.isrc + "\"", null));
-		}
-		if(track == null){
-			track = this.spotifySourceManager.getSearchSourceManager().loadItem(null, new AudioReference(getQuery(), null));
+
+		for(String provider : config.providers){
+			if(provider.startsWith(SpotifySourceManager.SEARCH_PREFIX)){
+				log.warn("Can not use spotify search as provider!");
+				continue;
+			}
+
+			if(provider.contains(ISRC_PATTERN)){
+				if(this.isrc != null){
+					provider = provider.replace(ISRC_PATTERN, this.isrc);
+				}
+				else{
+					log.debug("Ignoring identifier \"" + provider + "\" because this track does not have an ISRC!");
+					continue;
+				}
+			}
+
+			provider = provider.replace(QUERY_PATTERN, getTrackTitle());
+			track = loadItem(provider);
+			if(track != null){
+				break;
+			}
 		}
 
 		if(track instanceof AudioPlaylist){
@@ -86,6 +115,39 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 	@Override
 	public AudioSourceManager getSourceManager(){
 		return this.spotifySourceManager;
+	}
+
+	public AudioItem loadItem(String query) throws ExecutionException, InterruptedException{
+		var cf = new CompletableFuture<AudioItem>();
+		this.spotifySourceManager.getAudioPlayerManager().loadItem(query, new AudioLoadResultHandler(){
+
+			@Override
+			public void trackLoaded(AudioTrack track){
+				cf.complete(track);
+			}
+
+			@Override
+			public void playlistLoaded(AudioPlaylist playlist){
+				cf.complete(playlist);
+			}
+
+			@Override
+			public void noMatches(){
+				cf.complete(null);
+			}
+
+			@Override
+			public void loadFailed(FriendlyException exception){
+				cf.completeExceptionally(exception);
+			}
+		});
+		cf.join();
+		return cf.get();
+	}
+
+	@Override
+	protected AudioTrack makeShallowClone(){
+		return new SpotifyTrack(getInfo(), isrc, artworkURL, spotifySourceManager);
 	}
 
 }

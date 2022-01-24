@@ -33,16 +33,18 @@ public class SpotifySourceManager implements AudioSourceManager{
 	public static final Pattern SPOTIFY_URL_PATTERN = Pattern.compile("(https?://)?(www\\.)?open\\.spotify\\.com/(user/[a-zA-Z0-9-_]+/)?(?<type>track|album|playlist|artist)/(?<identifier>[a-zA-Z0-9-_]+)");
 	public static final String SEARCH_PREFIX = "spsearch:";
 	public static final int MAX_PAGE_ITEMS = 100;
+	public static final String ISRC_PATTERN = "%ISRC%";
+	public static final String QUERY_PATTERN = "%QUERY%";
 
 	private static final Logger log = LoggerFactory.getLogger(SpotifyPlugin.class);
 
 	private final SpotifyApi spotify;
 	private final SpotifyConfig config;
 	private final ClientCredentialsRequest clientCredentialsRequest;
-	private final AudioSourceManager searchAudioSourceManager;
+	private final AudioPlayerManager audioPlayerManager;
 	private final Thread thread;
 
-	public SpotifySourceManager(SpotifyConfig config, AudioSourceManager searchAudioSourceManager){
+	public SpotifySourceManager(SpotifyConfig config, AudioPlayerManager audioPlayerManager){
 		if(config.getClientId() == null || config.getClientId().isEmpty()){
 			throw new IllegalArgumentException("Spotify client id must be set");
 		}
@@ -50,7 +52,7 @@ public class SpotifySourceManager implements AudioSourceManager{
 			throw new IllegalArgumentException("Spotify secret must be set");
 		}
 		this.config = config;
-		this.searchAudioSourceManager = searchAudioSourceManager;
+		this.audioPlayerManager = audioPlayerManager;
 		this.spotify = new SpotifyApi.Builder().setClientId(config.clientId).setClientSecret(config.clientSecret).build();
 		this.clientCredentialsRequest = this.spotify.clientCredentials().build();
 
@@ -76,8 +78,8 @@ public class SpotifySourceManager implements AudioSourceManager{
 		thread.start();
 	}
 
-	public AudioSourceManager getSearchSourceManager(){
-		return this.searchAudioSourceManager;
+	public AudioPlayerManager getAudioPlayerManager(){
+		return this.audioPlayerManager;
 	}
 
 	@Override
@@ -206,6 +208,10 @@ public class SpotifySourceManager implements AudioSourceManager{
 		}
 
 		return new BasicAudioPlaylist(artist.getName() + "'s Top Tracks", tracks, null, false);
+	}
+
+	public SpotifyConfig getConfig(){
+		return config;
 	}
 
 }

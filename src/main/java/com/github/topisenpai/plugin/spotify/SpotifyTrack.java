@@ -31,7 +31,6 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 	private final String isrc;
 	private final String artworkURL;
 	private final SpotifySourceManager spotifySourceManager;
-	private final AudioTrackInfo trackInfo;
 
 	public SpotifyTrack(String title, String identifier, String isrc, Image[] images, String uri, ArtistSimplified[] artists, Integer trackDuration, SpotifySourceManager spotifySourceManager){
 		this(new AudioTrackInfo(title,
@@ -45,7 +44,6 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 
 	public SpotifyTrack(AudioTrackInfo trackInfo, String isrc, String artworkURL, SpotifySourceManager spotifySourceManager){
 		super(trackInfo);
-		this.trackInfo = trackInfo;
 		this.isrc = isrc;
 		this.artworkURL = artworkURL;
 		this.spotifySourceManager = spotifySourceManager;
@@ -148,7 +146,7 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 
 	@Override
 	protected AudioTrack makeShallowClone(){
-		return new SpotifyTrack(trackInfo, isrc, artworkURL, this.spotifySourceManager);
+		return new SpotifyTrack(getInfo(), isrc, artworkURL, this.spotifySourceManager);
 	}
 
 }

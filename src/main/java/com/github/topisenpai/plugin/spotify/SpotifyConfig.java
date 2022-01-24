@@ -15,8 +15,8 @@ public class SpotifyConfig{
 	public String clientSecret;
 	public CountryCode countryCode = CountryCode.US;
 	public String[] providers = {
-		"ytsearch:\""+ISRC_PATTERN+"\"",
-		"ytsearch:"+QUERY_PATTERN
+		"ytsearch:\"" + ISRC_PATTERN + "\"",
+		"ytsearch:" + QUERY_PATTERN
 	};
 
 	public String getClientId(){
@@ -50,4 +50,5 @@ public class SpotifyConfig{
 	public void setProviders(String[] providers){
 		this.providers = providers;
 	}
+
 }

@@ -18,8 +18,10 @@ import se.michaelthelin.spotify.model_objects.specification.Image;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.model_objects.specification.TrackSimplified;
 
-import static com.github.topisenpai.plugin.spotify.SpotifyConfig.ISRC_PATTERN;
-import static com.github.topisenpai.plugin.spotify.SpotifyConfig.QUERY_PATTERN;
+import java.util.List;
+
+import static com.github.topisenpai.plugin.spotify.SpotifySourceManager.ISRC_PATTERN;
+import static com.github.topisenpai.plugin.spotify.SpotifySourceManager.QUERY_PATTERN;
 
 public class SpotifyTrack extends DelegatedAudioTrack{
 
@@ -62,7 +64,7 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 		return this.artworkURL;
 	}
 
-	private String getQuery(){
+	private String buildSearchQuery(){
 		var query = trackInfo.title;
 		if(!trackInfo.author.equals("unknown")){
 			query += " " + trackInfo.author;
@@ -77,24 +79,24 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 
 		for(int i = 0; i < config.providers.length; i++){
 			String identifier = config.providers[i];
+
 			if(identifier.startsWith(SpotifySourceManager.SEARCH_PREFIX)){
+				log.warn("Can not use spsearch as provider!");
 				continue;
 			}
+
 			if(this.isrc != null){
 				identifier = identifier.replace(ISRC_PATTERN, this.isrc);
 			}else{
 				if(identifier.contains(ISRC_PATTERN)){
-					log.info("Spotify: Ignoring identifier \""+identifier+"\" because this track does not have an ISRC!");
+					log.debug("Spotify: Ignoring identifier \""+identifier+"\" because this track does not have an ISRC!");
 					continue;
 				}
 			}
-			identifier = identifier.replace(QUERY_PATTERN, getQuery());
-			track = this.spotifySourceManager.getSearchSourceManager().loadItem(null, new AudioReference(identifier, null));
+			identifier = identifier.replace(QUERY_PATTERN, buildSearchQuery());
+			track = loadItem(identifier);
 			if (track != null){
-				log.info("Spotify: Loaded item from identifier \""+identifier+"\"");
 				break;
-			}else{
-				log.info("Spotify: Identifier \""+identifier+"\" returned no results");
 			}
 		}
 
@@ -111,6 +113,25 @@ public class SpotifyTrack extends DelegatedAudioTrack{
 	@Override
 	public AudioSourceManager getSourceManager(){
 		return this.spotifySourceManager;
+	}
+
+	public AudioItem loadItem(String query){
+		try{
+			var apm = this.spotifySourceManager.getAudioPlayerManager();
+			var f = apm.getClass().getDeclaredField("sourceManagers");
+			f.setAccessible(true);
+			var managers = (List<AudioSourceManager>) f.get(apm);
+			for(var manager : managers){
+				var item = manager.loadItem(null, new AudioReference(query, null));
+				if(item != null)
+					return item;
+			}
+			return null;
+		}
+		catch(NoSuchFieldException | IllegalAccessException e){
+			log.error("An error occurred while loading item", e);
+		}
+		return null;
 	}
 
 }

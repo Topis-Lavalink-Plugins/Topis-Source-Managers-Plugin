@@ -29,7 +29,7 @@ public class SpotifyPlugin implements AudioPlayerManagerConfiguration{
 			log.error("No spotify client secret found in configuration. Not registering spotify source manager. Config key is 'plugins.spotify.clientSecret");
 			return manager;
 		}
-		manager.registerSourceManager(new SpotifySourceManager(this.config, manager.source(YoutubeAudioSourceManager.class)));
+		manager.registerSourceManager(new SpotifySourceManager(this.config, manager));
 		return manager;
 	}
 

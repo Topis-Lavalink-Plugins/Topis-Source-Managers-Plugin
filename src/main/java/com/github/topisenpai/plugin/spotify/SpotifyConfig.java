@@ -4,12 +4,12 @@ import com.neovisionaries.i18n.CountryCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import static com.github.topisenpai.plugin.spotify.SpotifySourceManager.ISRC_PATTERN;
+import static com.github.topisenpai.plugin.spotify.SpotifySourceManager.QUERY_PATTERN;
+
 @ConfigurationProperties(prefix = "plugins.spotify")
 @Component
 public class SpotifyConfig{
-
-	public static final String ISRC_PATTERN = "%ISRC%";
-	public static final String QUERY_PATTERN = "%QUERY%";
 
 	public String clientId;
 	public String clientSecret;

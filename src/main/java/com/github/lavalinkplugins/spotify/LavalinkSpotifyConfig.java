@@ -1,4 +1,4 @@
-package com.github.topisenpai.plugin.spotify;
+package com.github.lavalinkplugins.spotify;
 
 import com.github.lavalinkplugins.spotify.SpotifyConfig;
 import com.neovisionaries.i18n.CountryCode;

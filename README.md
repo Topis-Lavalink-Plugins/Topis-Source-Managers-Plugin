@@ -1,8 +1,8 @@
-[![](https://jitpack.io/v/TopiSenpai/spotify-plugin.svg)](https://jitpack.io/#TopiSenpai/spotify-plugin)
+[![](https://jitpack.io/v/Lavalink-Plugins/Spotify-Plugin.svg)](https://jitpack.io/#Lavalink-Plugins/Spotify-Plugin)
 
 # Spotify-Plugin
 
-A [Lavalink](https://github.com/freyacodes/Lavalink) plugin to lazy load [Spotify](https://www.spotify.com) playlists/albums/songs/artists(top tracks)/search results from [YouTube](https://youtube.com)
+A [Lavalink](https://github.com/freyacodes/Lavalink) plugin to lazy load [Spotify](https://www.spotify.com) playlists/albums/songs/artists(top tracks)/search results from [YouTube](https://youtube.com) and other sources
 
 ## Installation
 
@@ -11,7 +11,7 @@ To install this plugin either download the latest release and place it into your
 ```yaml
 lavalink:
   plugins:
-    - dependency: "com.github.topisenpai:spotify-plugin:vx.x.x" # replace vx.x.x with the latest release tag!
+    - dependency: "com.github.Lavalink-Plugins:Spotify-Plugin:vx.x.x" # replace vx.x.x with the latest release tag!
       repository: "https://jitpack.io"
 ```
 
@@ -76,7 +76,7 @@ followed by a `TrackExceptionEvent` and later `TrackEndEvent`
   "error": "Something broke when playing the track.",
   "exception": {
     "severity": "COMMON",
-    "cause": "com.github.topisenpai.plugin.spotify.SpotifyTrackNotFoundException: No matching Spotify track found",
+    "cause": "com.github.lavalinkplugins.spotify.SpotifyTrackNotFoundException: No matching Spotify track found",
     "message": "Something broke when playing the track."
   }
 }

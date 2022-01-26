@@ -1,6 +1,5 @@
-package com.github.topisenpai.plugin.spotify;
+package com.github.lavalinkplugins.spotify;
 
-import com.github.lavalinkplugins.spotify.SpotifySourceManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import dev.arbjerg.lavalink.api.AudioPlayerManagerConfiguration;
 import org.slf4j.Logger;

@@ -16,14 +16,12 @@ compileJava.options.encoding = "UTF-8"
 repositories {
 	mavenCentral()
 	maven { url "https://jitpack.io" }
-
-	maven { url "https://m2.dv8tion.net/releases" }
 	jcenter()
 }
 
 dependencies {
 	compileOnly "dev.arbjerg.lavalink:plugin-api:0.9.0"
-	implementation "se.michaelthelin.spotify:spotify-web-api-java:7.0.0"
+	implementation "com.github.Lavalink-Plugins:spotify-sourcemanager:fa07645"
 	runtimeOnly "com.github.freyacodes.lavalink:Lavalink-Server:d88d1c6"
 }
 

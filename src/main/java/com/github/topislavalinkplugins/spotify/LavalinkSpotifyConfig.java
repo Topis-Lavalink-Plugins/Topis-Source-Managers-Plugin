@@ -1,12 +1,11 @@
-package com.github.lavalinkplugins.spotify;
+package com.github.topislavalinkplugins.spotify;
 
-import com.github.lavalinkplugins.spotify.SpotifyConfig;
 import com.neovisionaries.i18n.CountryCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import static com.github.lavalinkplugins.spotify.SpotifySourceManager.ISRC_PATTERN;
-import static com.github.lavalinkplugins.spotify.SpotifySourceManager.QUERY_PATTERN;
+import static com.github.topislavalinkplugins.spotify.SpotifySourceManager.ISRC_PATTERN;
+import static com.github.topislavalinkplugins.spotify.SpotifySourceManager.QUERY_PATTERN;
 
 @ConfigurationProperties(prefix = "plugins.spotify")
 @Component
@@ -55,4 +54,5 @@ public class LavalinkSpotifyConfig{
 	public SpotifyConfig toSpotifyConfig(){
 		return new SpotifyConfig(clientId, clientSecret, countryCode, providers);
 	}
+
 }

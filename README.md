@@ -1,4 +1,4 @@
-[![](https://jitpack.io/v/Lavalink-Plugins/Spotify-Plugin.svg)](https://jitpack.io/#Lavalink-Plugins/Spotify-Plugin)
+[![](https://jitpack.io/v/Topis-Lavalink-Plugins/Spotify-Plugin.svg)](https://jitpack.io/#Topis-Lavalink-Plugins/Spotify-Plugin)
 
 # Spotify-Plugin
 
@@ -11,7 +11,7 @@ To install this plugin either download the latest release and place it into your
 ```yaml
 lavalink:
   plugins:
-    - dependency: "com.github.Lavalink-Plugins:Spotify-Plugin:vx.x.x" # replace vx.x.x with the latest release tag!
+    - dependency: "com.github.Topis-Lavalink-Plugins:Spotify-Plugin:vx.x.x" # replace vx.x.x with the latest release tag!
       repository: "https://jitpack.io"
 ```
 
@@ -76,7 +76,7 @@ followed by a `TrackExceptionEvent` and later `TrackEndEvent`
   "error": "Something broke when playing the track.",
   "exception": {
     "severity": "COMMON",
-    "cause": "com.github.lavalinkplugins.spotify.SpotifyTrackNotFoundException: No matching Spotify track found",
+    "cause": "com.github.topislavalinkplugins.spotify.SpotifyTrackNotFoundException: No matching Spotify track found",
     "message": "Something broke when playing the track."
   }
 }

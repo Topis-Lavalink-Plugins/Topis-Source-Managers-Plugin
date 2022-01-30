@@ -6,7 +6,7 @@ plugins {
 }
 
 group "com.github"
-version "1.0.16"
+version "1.0.17"
 mainClassName = "org.springframework.boot.loader.JarLauncher"
 
 sourceCompatibility = 11
@@ -20,9 +20,9 @@ repositories {
 }
 
 dependencies {
-	compileOnly "dev.arbjerg.lavalink:plugin-api:0.9.0"
-	implementation "com.github.Topis-Lavalink-Plugins:Spotify-SourceManager:v1.0.16"
-	runtimeOnly "com.github.freyacodes.lavalink:Lavalink-Server:d88d1c6"
+	compileOnly("dev.arbjerg.lavalink:plugin-api:0.9.0")
+	implementation "com.github.Topis-Lavalink-Plugins:Spotify-SourceManager:v1.0.17"
+	runtimeOnly("com.github.freyacodes.lavalink:Lavalink-Server:d88d1c6")
 }
 
 shadowJar {

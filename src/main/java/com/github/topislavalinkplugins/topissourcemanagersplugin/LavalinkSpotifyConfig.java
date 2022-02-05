@@ -1,23 +1,17 @@
-package com.github.topislavalinkplugins.spotify;
+package com.github.topislavalinkplugins.topissourcemanagersplugin;
 
+import com.github.topislavalinkplugins.topissourcemanagers.spotify.SpotifyConfig;
 import com.neovisionaries.i18n.CountryCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import static com.github.topislavalinkplugins.spotify.SpotifySourceManager.ISRC_PATTERN;
-import static com.github.topislavalinkplugins.spotify.SpotifySourceManager.QUERY_PATTERN;
-
-@ConfigurationProperties(prefix = "plugins.spotify")
+@ConfigurationProperties(prefix = "plugins.topissourcemanagers.spotify")
 @Component
 public class LavalinkSpotifyConfig{
 
 	private String clientId;
 	private String clientSecret;
 	private CountryCode countryCode = CountryCode.US;
-	private String[] providers = {
-		"ytsearch:\"" + ISRC_PATTERN + "\"",
-		"ytsearch:" + QUERY_PATTERN
-	};
 
 	public String getClientId(){
 		return this.clientId;
@@ -43,16 +37,9 @@ public class LavalinkSpotifyConfig{
 		this.countryCode = CountryCode.getByCode(countryCode);
 	}
 
-	public String[] getProviders(){
-		return providers;
-	}
-
-	public void setProviders(String[] providers){
-		this.providers = providers;
-	}
-
 	public SpotifyConfig toSpotifyConfig(){
-		return new SpotifyConfig(clientId, clientSecret, countryCode, providers);
+		return new SpotifyConfig(this.clientId, this.clientSecret, this.countryCode);
 	}
+
 
 }

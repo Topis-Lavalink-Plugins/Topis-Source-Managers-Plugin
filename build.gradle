@@ -6,7 +6,7 @@ plugins {
 }
 
 group "com.github"
-version "1.0.17"
+version "2.0.0"
 mainClassName = "org.springframework.boot.loader.JarLauncher"
 
 sourceCompatibility = 11
@@ -16,12 +16,13 @@ compileJava.options.encoding = "UTF-8"
 repositories {
 	mavenCentral()
 	maven { url "https://jitpack.io" }
+    maven { url "https://m2.dv8tion.net/releases" }
 	jcenter()
 }
 
 dependencies {
 	compileOnly("dev.arbjerg.lavalink:plugin-api:0.9.0")
-	implementation "com.github.Topis-Lavalink-Plugins:Spotify-SourceManager:v1.0.17"
+	implementation "com.github.Topis-Lavalink-Plugins:Topis-Source-Managers:v2.0.0"
 	runtimeOnly("com.github.freyacodes.lavalink:Lavalink-Server:d88d1c6")
 }
 

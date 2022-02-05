@@ -1,8 +1,13 @@
 [![](https://jitpack.io/v/Topis-Lavalink-Plugins/Spotify-Plugin.svg)](https://jitpack.io/#Topis-Lavalink-Plugins/Spotify-Plugin)
 
-# Spotify-Plugin
+# Topis-Source-Managers-Plugin 
 
-A [Lavalink](https://github.com/freyacodes/Lavalink) plugin to lazy load [Spotify](https://www.spotify.com) playlists/albums/songs/artists(top tracks)/search results from [YouTube](https://youtube.com) and other sources
+A [Lavalink](https://github.com/freyacodes/Lavalink) plugin to support more audio sources.
+* [Spotify](https://www.spotify.com) playlists/albums/songs/artists(top tracks)/search results
+* [Apple Music](https://www.apple.com/apple-music/) playlists/albums/songs/artists/search results
+
+`*tracks are played via YouTube or other configurable sources`
+
 
 ## Installation
 
@@ -11,7 +16,7 @@ To install this plugin either download the latest release and place it into your
 ```yaml
 lavalink:
   plugins:
-    - dependency: "com.github.Topis-Lavalink-Plugins:Spotify-Plugin:vx.x.x" # replace vx.x.x with the latest release tag!
+    - dependency: "com.github.Topis-Lavalink-Plugins:Topis-Source-Managers-Plugin:vx.x.x" # replace vx.x.x with the latest release tag!
       repository: "https://jitpack.io"
 ```
 

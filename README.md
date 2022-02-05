@@ -22,28 +22,42 @@ new application. Then copy the `Client ID` & `Client Secret` into your `applicat
 
 ```yaml
 plugins:
-  spotify:
-    clientId: "your client id"
-    clientSecret: "your client secret"
-    countryCode: "US" # the country code you want to use for filtering the artists top tracks. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+  topissourcemanagers:
     providers: # Custom providers for track loading. This is the default
-        - "ytsearch:\"%ISRC%\"" # Will be ignored if track does not have an ISRC. See https://en.wikipedia.org/wiki/International_Standard_Recording_Code
-        - "ytsearch:%QUERY%" # Will be used if track has no ISRC or no track could be found for the ISRC
-      # - "scsearch:%QUERY%" you can add multiple other fallback sources here
+      - "ytsearch:\"%ISRC%\"" # Will be ignored if track does not have an ISRC. See https://en.wikipedia.org/wiki/International_Standard_Recording_Code
+      - "ytsearch:%QUERY%" # Will be used if track has no ISRC or no track could be found for the ISRC
+    # - "scsearch:%QUERY%" you can add multiple other fallback sources here
+    sources:
+      spotify: true # Enable Spotify source
+      applemusic: true # Enable Apple Music source
+    spotify:
+        clientId: "your client id"
+        clientSecret: "your client secret"
+        countryCode: "US" # the country code you want to use for filtering the artists top tracks. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+    applemusic:
+        countryCode: "US" # the country code you want to use for filtering the artists top tracks and language. See https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 ```
 
 ## Usage
 
-Just tell Lavalink to load a Spotify url and the plugin does the rest
-You can also use `spsearch:<query>`(remove the <>) to search for songs on Spotify 
+Just tell Lavalink to load an url and the plugin does the rest
+You can also use `spsearch:<query>` or `amsearch:<query>`(remove the <>) to search for songs on Spotify or Apple Music
 
-#### All supported Spotify URL types are:
+### All supported URL types are:
 
+#### Spotify
 * spsearch:animals architects
 * https://open.spotify.com/track/0eG08cBeKk0mzykKjw4hcQ
 * https://open.spotify.com/album/7qemUq4n71awwVPOaX7jw4
 * https://open.spotify.com/playlist/37i9dQZF1DXaZvoHOvRg3p
 * https://open.spotify.com/artist/3ZztVuWxHzNpl0THurTFCv
+
+#### Apple Music
+* amsearch:animals architects
+* https://music.apple.com/us/album/animals/1533388849?i=1533388859
+* https://music.apple.com/us/album/for-those-that-wish-to-exist/1533388849
+* https://music.apple.com/us/playlist/architects-essentials/pl.40e568c609ae4b1eba58b6e89f4cd6a5
+* https://music.apple.com/us/artist/architects/182821355
 
 ---
 
@@ -76,7 +90,7 @@ followed by a `TrackExceptionEvent` and later `TrackEndEvent`
   "error": "Something broke when playing the track.",
   "exception": {
     "severity": "COMMON",
-    "cause": "com.github.topislavalinkplugins.sources.SpotifyTrackNotFoundException: No matching Spotify track found",
+    "cause": "com.github.topislavalinkplugins.topissourcemanagers.TrackNotFoundException: No matching track found",
     "message": "Something broke when playing the track."
   }
 }

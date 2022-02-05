@@ -76,7 +76,7 @@ followed by a `TrackExceptionEvent` and later `TrackEndEvent`
   "error": "Something broke when playing the track.",
   "exception": {
     "severity": "COMMON",
-    "cause": "com.github.topislavalinkplugins.spotify.SpotifyTrackNotFoundException: No matching Spotify track found",
+    "cause": "com.github.topislavalinkplugins.sources.SpotifyTrackNotFoundException: No matching Spotify track found",
     "message": "Something broke when playing the track."
   }
 }

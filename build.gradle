@@ -22,9 +22,8 @@ repositories {
 
 dependencies {
 	compileOnly("dev.arbjerg.lavalink:plugin-api:0.9.0")
-	implementation "com.github.Topis-Lavalink-Plugins:Topis-Source-Managers:v2.0.0"
-	implementation "com.github.Topis-Lavalink-Plugins:Topis-Source-Managers:v2.0.1"
-	runtimeOnly("com.github.freyacodes.lavalink:Lavalink-Server:d88d1c6")
+	implementation "com.github.Topis-Lavalink-Plugins:Topis-Source-Managers:v2.0.2"
+	runtimeOnly("com.github.freyacodes.lavalink:Lavalink-Server:77a3bd8")
 }
 
 shadowJar {

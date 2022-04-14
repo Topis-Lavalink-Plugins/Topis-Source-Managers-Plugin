@@ -14,6 +14,8 @@ A [Lavalink](https://github.com/freyacodes/Lavalink) plugin to support more audi
 
 To install this plugin either download the latest release and place it into your `plugins` folder or add the following into your `application.yml`
 
+For the moment, plugin support is an experimental Lavalink feature. To use this plugin, make sure you're using a [Lavalink build with plugin support](https://github.com/freyacodes/Lavalink/tree/dev).
+
 ```yaml
 lavalink:
   plugins:
